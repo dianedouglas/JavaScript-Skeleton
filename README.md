@@ -1,6 +1,6 @@
 # _My JavaScript Starter Kit_
 
-#### _Skeleton for JavaScript projects with asset pipeline built in Gulp with dependencies managed by Npm and Bower. Includes development server, jQuery and Bootstrap._
+#### _Skeleton for JavaScript projects with asset pipeline built in Gulp with dependencies managed by Npm and Bower. Includes development server, jQuery and Bootstrap. Automatically deploy to GitHub Pages when you build and make a gh-pages branch._
 
 #### By Diane Douglas
 
@@ -16,6 +16,7 @@ After putting together the new version of the Epicodus JavaScript curriculum inc
 * User input from the form is taken from the HTML in a frontend JavaScript file and passed to a method coming from a backend JavaScript file which holds an exported object prototype declaration.
 * The method simply returns the input unchanged so that it can be printed to the screen with jQuery establishing that all files are connected up correctly with all dependencies included.
 * For cleanliness, a .gitignore file is included with standard files, and this README can be used as a template for a new one.
+* By running `gulp build` or `gulp build --prod` to minimize, then pushing changes to a gh-pages branch you can automatically deploy to GitHub Pages.
 
 ## Setup and Use
 
@@ -31,6 +32,7 @@ Run the project:
 2. Install local dependencies with: `npm install && bower install`.
 3. Build the project with `gulp build`.
 4. Serve the project on the development server with `gulp serve`.
+5. Deploy by building and pushing changes to a `gh-pages` branch.
 
 If everything works correctly, you can enter a value into the form and then see it displayed when you submit the form along with a message that says "get started". If this works, that means that jQuery was correctly included and you'll also notice standard Bootstrap formatting. Ready to start prototyping your new project!
 
