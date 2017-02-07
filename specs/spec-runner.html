@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Mocha spec runner</title>
+  <link rel="stylesheet" href="mocha.css">
+</head>
+<body>
+  <div id="mocha"></div>
+  <script src="../build/js/vendor.min.js"></script>
+  <script src="../js/basic.js"></script>
+  <!-- include all business logic JS object prototype declaration files here. 
+  All files in /js not ending in -interface. -->
+  <script src="mocha.js"></script>
+  <script src="chai.js"></script>
+  <script>mocha.setup('bdd');</script>
+  <script src="specs.js"></script>
+  <script>
+    should = chai.should();
+    mocha.checkLeaks();
+    mocha.globals(['jQuery']);
+    mocha.run();
+  </script>
+</body>
+</html>
