@@ -19,6 +19,10 @@ var lib = require('bower-files')({
   }
 });
 var browserSync = require('browser-sync').create();
+var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
+var concatCss = require('gulp-concat-css');
+var cleanCSS = require('gulp-clean-css');
 
 gulp.task('bowerJS', function () {
   return gulp.src(lib.ext('js').files)
@@ -54,8 +58,37 @@ gulp.task("minifyScripts", ["jsBrowserify"], function(){
     .pipe(gulp.dest("./build/js"));
 });
 
+// take all SASS from styles, build and move to tmp/css
+
+gulp.task('buildSASS', function() {
+  return gulp.src(['styles/*.scss'])
+    .pipe(sourcemaps.init()) 
+    .pipe(sass())
+    .pipe(sourcemaps.write())
+    .pipe(gulp.dest('./tmp/css'));
+});
+
+// take all CSS from styles, concat and move to tmp/css
+
+gulp.task('buildCSS', function() {
+  return gulp.src(['styles/*.css'])
+    .pipe(concatCss("basicstyles.css"))
+    .pipe(cleanCSS({compatibility: 'ie8'}))
+    .pipe(gulp.dest('./tmp/css'));
+});
+
+// take all css files from inside tmp/css (regardless of made with SASS or plain CSS), 
+// and put htem in build/css to keep separate from vendor.css from bower.
+
+gulp.task('concatenateAllStyles', function(){
+  return gulp.src(['tmp/css/*.css'])
+    .pipe(concatCss("finalstyles.css"))
+    .pipe(cleanCSS({compatibility: 'ie8'}))
+    .pipe(gulp.dest('./build/css'));
+});
+
 gulp.task("clean", function(){
-  return del(['build', 'tmp']);
+  return del(['build/js', 'build/css', 'tmp']);
 });
 
 gulp.task('build', ['clean'], function(){
@@ -65,6 +98,7 @@ gulp.task('build', ['clean'], function(){
     gulp.start('jsBrowserify');
   }
   gulp.start('bower');
+  gulp.start('styles');
 });
 
 gulp.task('serve', function() {
@@ -77,7 +111,27 @@ gulp.task('serve', function() {
 
   gulp.watch(['js/*.js'], ['jsBuild']);
   gulp.watch(['bower.json'], ['bowerBuild']);
+  gulp.watch(['*.html'], ['htmlBuild']); // html changes, reload.
+  gulp.watch(['styles/*'], ['styles']);
 
+});
+
+gulp.task('htmlBuild', function(){
+  browserSync.reload();
+});
+
+// uncomment this version for CSS only
+gulp.task("pullStyles", ["buildCSS"], function(){
+  return gulp.start('concatenateAllStyles');
+});
+
+// uncomment this version for SASS and CSS
+// gulp.task("pullStyles", ["buildCSS", "buildSASS"], function(){
+//   return gulp.start('concatenateAllStyles');
+// });
+
+gulp.task('styles', ['pullStyles'], function(){
+  browserSync.reload();
 });
 
 gulp.task('jsBuild', ['jsBrowserify', 'jshint'], function(){
